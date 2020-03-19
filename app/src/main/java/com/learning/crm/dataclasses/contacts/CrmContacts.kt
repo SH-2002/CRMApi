@@ -8,5 +8,5 @@ data class CrmContacts(
     @SerializedName("data")
     val data: List<Data>,
     @SerializedName("info")
-    val info: Info
+    val info: Info? = null
 )

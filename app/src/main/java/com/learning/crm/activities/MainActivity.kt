@@ -1,81 +1,108 @@
 package com.learning.crm.activities
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.learning.crm.ApiEssentials
-import com.learning.crm.R
-import com.learning.crm.TableCreatingFunction
+import com.learning.crm.*
+import com.learning.crm.ApiEssentials.Companion.header
 import com.learning.crm.dataclasses.contacts.CrmContacts
 import com.learning.crm.dataclasses.contacts.Data
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.HeaderMap
-import java.util.concurrent.TimeUnit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity(), TableCreatingFunction.OnTableClicked {
 
     private val TAG = MainActivity::class.java.simpleName
+
+    companion object{
+
+        const val ADD_CONTACT : Int = 4
+        var crmContacts : MutableList<Data> = ArrayList()
+
+    }
+
+    init {
+        header["Content-Type"] = "application/json"
+        header["Authorization"] = "Zoho-oauthtoken ${ApiEssentials.oauthToken}"
+        CrmRetrofit.getRetrofit()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         heading.text = "Contacts"
         initApiCall()
+
+        addContact.setOnClickListener {
+            startActivityForResult(Intent(this, AddActivity::class.java), ADD_CONTACT)
+        }
+
     }
 
-    private fun initApiCall(){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(ApiEssentials.BASE_URL)
-            .client(getClient())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    private fun initApiCall() {
+        val api: ApiInterfaces = CrmRetrofit.getApi()
+        val call: Call<CrmContacts> = api.getContacts(header)
 
-        val api : FetchContacts = retrofit.create(FetchContacts::class.java)
-        val header = HashMap<String,String>()
-        header["Content-Type"] = "application/json"
-        header["Authorization"] = "Zoho-oauthtoken ${ApiEssentials.oauthToken}"
-        val call : Call<CrmContacts> = api.getContacts(header)
-
-        call.enqueue(object : Callback<CrmContacts>{
+        call.enqueue(object : Callback<CrmContacts> {
             override fun onFailure(call: Call<CrmContacts>, t: Throwable) {
-                Log.e(TAG,":: onFailure Called!")
+                Log.e(TAG, ":: onFailure Called!")
             }
 
             override fun onResponse(call: Call<CrmContacts>, response: Response<CrmContacts>) {
-                Log.e(TAG,"onResponse called Response = ${response.body()}")
                 runOnUiThread {
-                    val data = (response.body() as CrmContacts).data
                     loader.visibility = View.GONE
-                    scrollLayout.addView(TableCreatingFunction(this@MainActivity,data).viewReturner())
+                }
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        Log.e(TAG, "onResponse called Response = ${response.body()}")
+                        runOnUiThread {
+                            val data = (response.body() as CrmContacts).data
+                            scrollLayout.removeAllViews()
+                            crmContacts = data as MutableList<Data>
+                            scrollLayout.addView(
+                                TableCreatingFunction(
+                                    this@MainActivity,
+                                    data
+                                ).viewReturner()
+                            )
+                        }
+                    }else{
+                        Log.e(TAG,"::onResponse called Body null")
+                    }
+                }else{
+                    Log.e(TAG,"::onResponse called Success Failed")
                 }
             }
 
         })
     }
 
-
-    interface FetchContacts{
-        @GET("v2/Contacts")
-        fun getContacts(@HeaderMap header : HashMap<String,String>) : Call<CrmContacts>
-    }
-    private fun getClient() : OkHttpClient {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val builder : OkHttpClient.Builder = OkHttpClient.Builder()
-            .connectTimeout(50, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-        builder.addNetworkInterceptor(interceptor)
-        return builder.build()
-    }
-
     override fun sendTable(tableData: List<Data>) {
 
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.e(TAG,"Request code = $requestCode && Result code = $resultCode")
+        if(requestCode == ADD_CONTACT && resultCode == Activity.RESULT_OK){
+            val bundle = data?.getBundleExtra("contact")
+            val contact : Data = bundle?.getSerializable("contact") as Data
+            Log.e(TAG,contact.firstName)
+            crmContacts.add(0,contact)
+            scrollLayout.removeAllViews()
+            loader.visibility = View.VISIBLE
+            Handler().postDelayed({
+                loader.visibility = View.GONE
+                scrollLayout.addView(TableCreatingFunction(this, crmContacts).viewReturner())
+            },2000)
+        }
+    }
+
 
 }
