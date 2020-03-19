@@ -1,8 +1,8 @@
-package com.learning.crm.activities.dataclasses.contacts
+package com.learning.crm.dataclasses.contacts
 
 
 import com.google.gson.annotations.SerializedName
-import com.learning.crm.dataclasses.contacts.Data
+import com.learning.crm.activities.dataclasses.contacts.Info
 
 data class CrmContacts(
     @SerializedName("data")
