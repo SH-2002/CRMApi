@@ -55,7 +55,8 @@ class FormPairView(context: Context, attrs: AttributeSet) : ConstraintLayout(con
             this.month = month
             this.day = dayOfMonth
 
-            val dateStr = "$year-${month + 1}-$day"
+            val dateStr = "$year-${if (month+1 > 10) month+1 else "0${month+1}"}-${if(day > 10) day else "0$day" }"
+            //val dateStr = "$year-${month+1}-$day"
 
             editText.setText(dateStr)
 

@@ -115,7 +115,8 @@ class AddActivity : AppCompatActivity() {
                         } else {
                             Toast.makeText(
                                 this@AddActivity,
-                                "Contact adding failed!",
+                                "Contact adding failed! \n" +
+                                        (response.body() as AddResponse).data[0].code,
                                 Toast.LENGTH_SHORT
                             ).show()
                             Log.e(TAG, "Response = ${response.body()}")

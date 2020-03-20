@@ -3,7 +3,6 @@ package com.learning.crm.dataclasses.contacts
 
 import com.google.gson.annotations.SerializedName
 import com.learning.crm.activities.dataclasses.contacts.Approval
-import com.learning.crm.activities.dataclasses.contacts.CreatedBy
 import com.learning.crm.activities.dataclasses.contacts.ModifiedBy
 import com.learning.crm.activities.dataclasses.contacts.Owner
 import java.io.Serializable
