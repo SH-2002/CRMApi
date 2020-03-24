@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import com.learning.crm.*
 import com.learning.crm.ApiEssentials.Companion.header
 import com.learning.crm.dataclasses.contacts.CrmContacts
 import com.learning.crm.dataclasses.contacts.Data
+import kotlinx.android.synthetic.main.activity_add2.*
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,12 +39,17 @@ class MainActivity : AppCompatActivity(), TableCreatingFunction.OnTableClicked {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         heading.text = "Contacts"
-        initApiCall()
 
         addContact.setOnClickListener {
-            startActivityForResult(Intent(this, AddActivity::class.java), ADD_CONTACT)
+            startActivityForResult(Intent(this, Add2Activity::class.java), ADD_CONTACT)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loader.visibility = View.VISIBLE
+        initApiCall()
     }
 
     private fun initApiCall() {

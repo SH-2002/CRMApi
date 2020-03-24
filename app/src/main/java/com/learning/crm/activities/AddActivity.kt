@@ -27,7 +27,7 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AddActivity : AppCompatActivity() {
+class   AddActivity : AppCompatActivity() {
 
     companion object {
         const val DATE_PICKER_ID = 4
@@ -45,6 +45,7 @@ class AddActivity : AppCompatActivity() {
         setSupportActionBar(toolBar)
         window.statusBarColor = ContextCompat.getColor(this,R.color.colorPrimaryDark)
         toolBar.setNavigationOnClickListener { finish() }
+
     }
 
     override fun onCreateDialog(id: Int): Dialog? {
@@ -57,7 +58,7 @@ class AddActivity : AppCompatActivity() {
     }
 
     private val pickerListener: DatePickerDialog.OnDateSetListener =
-        DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+        DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             this.year = year
             this.month = month
             this.day = dayOfMonth
