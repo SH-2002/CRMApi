@@ -42,7 +42,7 @@ class Add2Activity : AppCompatActivity(), AddContactAdapter.OnPickListClicked {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimaryDark)
         addContactForm.adapter = formAdapter
         addContactForm.layoutManager = LinearLayoutManager(this)
-        addContactForm.setItemViewCacheSize(20)
+        addContactForm.setItemViewCacheSize(10)
 
         val call = CrmRetrofit.getApi().getContactLayouts(ApiEssentials.header)
         call.enqueue(object : retrofit2.Callback<ContactLayouts> {

@@ -12,7 +12,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.learning.crm.dataclasses.crmlayouts.Field
 import com.learning.crm.dataclasses.crmlayouts.PickValues
@@ -78,10 +77,17 @@ class AddContactAdapter(
             if (field.required) {
                 holder.mandatoryIcon.visibility = View.VISIBLE
             }
+            iconDisabler(holder)
             when (field.dataType) {
-                "text" -> inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-                "phone" -> inputType = InputType.TYPE_CLASS_PHONE
-                "email" -> inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                "text" -> {
+                    inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                }
+                "phone" -> {
+                    inputType = InputType.TYPE_CLASS_PHONE
+                }
+                "email" -> {
+                    inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                }
                 "date" -> {
                     inputType = InputType.TYPE_DATETIME_VARIATION_DATE
                     isDate(viewHolder)
@@ -98,6 +104,7 @@ class AddContactAdapter(
                     editText.setLines(5)
                     editText.maxLines = 8
                 }
+                else -> inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             }
             editText.inputType = inputType
             editText.setText(valueMap[field.apiName])
@@ -120,6 +127,12 @@ class AddContactAdapter(
             })
         }
 
+    }
+
+    private fun iconDisabler(holder : ViewHolder){
+        holder.mandatoryIcon.visibility = View.GONE
+        holder.calendarIcon.visibility = View.GONE
+        holder.spinnerIcon.visibility = View.GONE
     }
 
 
