@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/message"
+            android:icon="@drawable/ic_email"
+            android:title="@string/message" />
+
+        <item
+            android:id="@+id/chat"
+            android:icon="@drawable/ic_chat"
+            android:title="@string/chat" />
+
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/ic_person"
+            android:title="@string/profile" />
+
+    </group>
+
+    <item android:title="@string/communication">
+
+        <menu>
+
+            <item
+                android:id="@+id/send"
+                android:icon="@drawable/ic_send"
+                android:title="@string/send" />
+
+            <item
+                android:id="@+id/share"
+                android:icon="@drawable/ic_share"
+                android:title="@string/share" />
+
+
+        </menu>
+
+    </item>
+
+    <item android:title="Logout">
+
+        <menu>
+
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_power"
+                android:title="@string/logout"/>
+
+        </menu>
+
+    </item>
+
+</menu>

@@ -1,8 +1,8 @@
 package com.learning.animation.activities
 
 import android.animation.ValueAnimator
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         bottomNav.setOnNavigationItemSelectedListener(bottomNavigationListener)
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout, HomeFragment()).commit()
-        slider.setOnClickListener { bottomNavBarListener() }
+        slider.setOnClickListener { bottomNavBarListener()
+        startActivity(Intent(this,DrawerActivity::class.java))}
     }
 
     private fun bottomNavBarListener() {
@@ -36,9 +37,8 @@ class MainActivity : AppCompatActivity() {
                 val param = view.layoutParams
                 param.height = it.animatedValue as Int
                 view.layoutParams = param
-
             }
-            anim.duration = 800
+            anim.duration = 300
             anim.start()
         } else {
             val anim: ValueAnimator = ValueAnimator.ofInt(view.measuredHeight, 0)
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                 param.height = it.animatedValue as Int
                 view.layoutParams = param
             }
-            anim.duration = 800
+            anim.duration = 300
             anim.start()
         }
     }
